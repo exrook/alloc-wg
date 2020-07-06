@@ -3,6 +3,7 @@ mod navigate;
 mod node;
 mod search;
 pub mod set;
+mod tests;
 
 #[doc(hidden)]
 trait Recover<Q: ?Sized> {
