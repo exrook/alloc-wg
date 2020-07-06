@@ -17,6 +17,7 @@
     allocator_api,
     alloc_layout_extra,
     dropck_eyepatch,
+    extend_one,
     coerce_unsized,
     const_fn,
     const_if_match,
@@ -30,8 +31,11 @@
     dispatch_from_dyn,
     unsize,
     exact_size_is_empty,
+    internal_uninit_const,
     receiver_trait,
     maybe_uninit_extra,
+    maybe_uninit_slice,
+    or_patterns,
     ptr_internals,
     const_generics,
     const_generic_impls_guard,
@@ -88,6 +92,7 @@
 // pub mod alloc;
 pub use liballoc::alloc;
 pub mod boxed;
+mod btree;
 pub mod clone;
 pub mod collections;
 pub mod iter;
