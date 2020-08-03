@@ -92,7 +92,7 @@ impl<T: Clone> Clone for BTreeSet<T> {
 /// [`BTreeSet`]: struct.BTreeSet.html
 /// [`iter`]: struct.BTreeSet.html#method.iter
 //#[stable(feature = "rust1", since = "1.0.0")]
-pub struct Iter<'a, T: 'a> {
+pub struct Iter<'a, T> {
     iter: Keys<'a, T, ()>,
 }
 
@@ -125,7 +125,7 @@ pub struct IntoIter<T> {
 /// [`range`]: struct.BTreeSet.html#method.range
 #[derive(Debug)]
 //#[stable(feature = "btree_range", since = "1.17.0")]
-pub struct Range<'a, T: 'a> {
+pub struct Range<'a, T> {
     iter: super::map::Range<'a, T, ()>,
 }
 
@@ -211,11 +211,11 @@ where
 /// [`BTreeSet`]: struct.BTreeSet.html
 /// [`difference`]: struct.BTreeSet.html#method.difference
 //#[stable(feature = "rust1", since = "1.0.0")]
-pub struct Difference<'a, T: 'a> {
+pub struct Difference<'a, T> {
     inner: DifferenceInner<'a, T>,
 }
 #[derive(Debug)]
-enum DifferenceInner<'a, T: 'a> {
+enum DifferenceInner<'a, T> {
     Stitch {
         // iterate all of `self` and some of `other`, spotting matches along the way
         self_iter: Iter<'a, T>,
@@ -261,11 +261,11 @@ impl<T: Debug> Debug for SymmetricDifference<'_, T> {
 /// [`BTreeSet`]: struct.BTreeSet.html
 /// [`intersection`]: struct.BTreeSet.html#method.intersection
 //#[stable(feature = "rust1", since = "1.0.0")]
-pub struct Intersection<'a, T: 'a> {
+pub struct Intersection<'a, T> {
     inner: IntersectionInner<'a, T>,
 }
 #[derive(Debug)]
-enum IntersectionInner<'a, T: 'a> {
+enum IntersectionInner<'a, T> {
     Stitch {
         // iterate similarly sized sets jointly, spotting matches along the way
         a: Iter<'a, T>,
@@ -294,7 +294,7 @@ impl<T: Debug> Debug for Intersection<'_, T> {
 /// [`BTreeSet`]: struct.BTreeSet.html
 /// [`union`]: struct.BTreeSet.html#method.union
 //#[stable(feature = "rust1", since = "1.0.0")]
-pub struct Union<'a, T: 'a>(MergeIterInner<Iter<'a, T>>);
+pub struct Union<'a, T>(MergeIterInner<Iter<'a, T>>);
 
 //#[stable(feature = "collection_debug", since = "1.17.0")]
 impl<T: Debug> Debug for Union<'_, T> {
@@ -1141,7 +1141,6 @@ impl<'a, T> IntoIterator for &'a BTreeSet<T> {
 //#[unstable(feature = "btree_drain_filter", issue = "70530")]
 pub struct DrainFilter<'a, T, F>
 where
-    T: 'a,
     F: 'a + FnMut(&T) -> bool,
 {
     pred: F,

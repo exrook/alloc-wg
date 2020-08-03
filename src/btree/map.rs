@@ -311,7 +311,7 @@ impl<K: Debug, V: Debug> Debug for Iter<'_, K, V> {
 /// [`BTreeMap`]: struct.BTreeMap.html
 //#[stable(feature = "rust1", since = "1.0.0")]
 #[derive(Debug)]
-pub struct IterMut<'a, K: 'a, V: 'a> {
+pub struct IterMut<'a, K, V> {
     range: RangeMut<'a, K, V>,
     length: usize,
 }
@@ -388,7 +388,7 @@ impl<K, V: Debug> Debug for Values<'_, K, V> {
 /// [`BTreeMap`]: struct.BTreeMap.html
 //#[stable(feature = "map_values_mut", since = "1.10.0")]
 #[derive(Debug)]
-pub struct ValuesMut<'a, K: 'a, V: 'a> {
+pub struct ValuesMut<'a, K, V> {
     inner: IterMut<'a, K, V>,
 }
 
@@ -420,7 +420,7 @@ impl<K: Debug, V: Debug> Debug for Range<'_, K, V> {
 /// [`range_mut`]: struct.BTreeMap.html#method.range_mut
 /// [`BTreeMap`]: struct.BTreeMap.html
 //#[stable(feature = "btree_range", since = "1.17.0")]
-pub struct RangeMut<'a, K: 'a, V: 'a> {
+pub struct RangeMut<'a, K, V> {
     front: Option<Handle<NodeRef<marker::Mut<'a>, K, V, marker::Leaf>, marker::Edge>>,
     back: Option<Handle<NodeRef<marker::Mut<'a>, K, V, marker::Leaf>, marker::Edge>>,
 
@@ -446,7 +446,7 @@ impl<K: Debug, V: Debug> Debug for RangeMut<'_, K, V> {
 /// [`BTreeMap`]: struct.BTreeMap.html
 /// [`entry`]: struct.BTreeMap.html#method.entry
 //#[stable(feature = "rust1", since = "1.0.0")]
-pub enum Entry<'a, K: 'a, V: 'a> {
+pub enum Entry<'a, K, V> {
     /// A vacant entry.
     //#[stable(feature = "rust1", since = "1.0.0")]
     Vacant(
@@ -475,7 +475,7 @@ impl<K: Debug + Ord, V: Debug> Debug for Entry<'_, K, V> {
 ///
 /// [`Entry`]: enum.Entry.html
 //#[stable(feature = "rust1", since = "1.0.0")]
-pub struct VacantEntry<'a, K: 'a, V: 'a> {
+pub struct VacantEntry<'a, K, V> {
     key: K,
     handle: Handle<NodeRef<marker::Mut<'a>, K, V, marker::Leaf>, marker::Edge>,
     length: &'a mut usize,
@@ -496,7 +496,7 @@ impl<K: Debug + Ord, V> Debug for VacantEntry<'_, K, V> {
 ///
 /// [`Entry`]: enum.Entry.html
 //#[stable(feature = "rust1", since = "1.0.0")]
-pub struct OccupiedEntry<'a, K: 'a, V: 'a> {
+pub struct OccupiedEntry<'a, K, V> {
     handle: Handle<NodeRef<marker::Mut<'a>, K, V, marker::LeafOrInternal>, marker::KV>,
 
     length: &'a mut usize,
@@ -1754,8 +1754,6 @@ impl<K, V> Clone for Values<'_, K, V> {
 //#[unstable(feature = "btree_drain_filter", issue = "70530")]
 pub struct DrainFilter<'a, K, V, F>
 where
-    K: 'a,
-    V: 'a,
     F: 'a + FnMut(&K, &mut V) -> bool,
 {
     pred: F,
