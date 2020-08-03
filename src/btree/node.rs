@@ -187,7 +187,7 @@ impl<K, V> Root<K, V> {
         NodeRef {
             height: self.height,
             node: self.node.as_ptr(),
-            root: self as *mut _,
+            root: self,
             _marker: PhantomData,
         }
     }
@@ -213,7 +213,7 @@ impl<K, V> Root<K, V> {
         let mut ret = NodeRef {
             height: self.height,
             node: self.node.as_ptr(),
-            root: self as *mut _,
+            root: self,
             _marker: PhantomData,
         };
 
@@ -945,7 +945,7 @@ impl<'a, K, V> Handle<NodeRef<marker::Mut<'a>, K, V, marker::Internal>, marker::
     /// when the ordering of edges has been changed, such as in the various `insert` methods.
     fn correct_parent_link(mut self) {
         let idx = self.idx as u16;
-        let ptr = self.node.as_internal_mut() as *mut _;
+        let ptr: *mut _ = self.node.as_internal_mut();
         let mut child = self.descend();
         unsafe {
             (*child.as_leaf_mut()).parent = ptr;
@@ -1335,9 +1335,9 @@ impl<'a, K, V> Handle<NodeRef<marker::Mut<'a>, K, V, marker::Internal>, marker::
             {
                 let left_kv = left_node.reborrow_mut().into_kv_pointers_mut();
                 let right_kv = right_node.reborrow_mut().into_kv_pointers_mut();
-                let parent_kv = {
+                let parent_kv: (*mut K, *mut V) = {
                     let kv = self.reborrow_mut().into_kv_mut();
-                    (kv.0 as *mut K, kv.1 as *mut V)
+                    (kv.0, kv.1)
                 };
 
                 // Make room for stolen elements in the right child.
@@ -1392,9 +1392,9 @@ impl<'a, K, V> Handle<NodeRef<marker::Mut<'a>, K, V, marker::Internal>, marker::
             {
                 let left_kv = left_node.reborrow_mut().into_kv_pointers_mut();
                 let right_kv = right_node.reborrow_mut().into_kv_pointers_mut();
-                let parent_kv = {
+                let parent_kv: (*mut K, *mut V) = {
                     let kv = self.reborrow_mut().into_kv_mut();
-                    (kv.0 as *mut K, kv.1 as *mut V)
+                    (kv.0, kv.1)
                 };
 
                 // Move parent's key/value pair to the left child.

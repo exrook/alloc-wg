@@ -2828,8 +2828,8 @@ impl<'a, K: 'a, V: 'a> Handle<NodeRef<marker::Mut<'a>, K, V, marker::LeafOrInter
                 // Replace the location freed in the internal node with the next KV,
                 // and remove that next KV from its leaf.
 
-                let key_loc = internal.kv_mut().0 as *mut K;
-                let val_loc = internal.kv_mut().1 as *mut V;
+                let key_loc: *mut K = internal.kv_mut().0;
+                let val_loc: *mut V = internal.kv_mut().1;
 
                 // Deleting from the left side is typically faster since we can
                 // just pop an element from the end of the KV array without
