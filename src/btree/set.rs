@@ -1171,7 +1171,7 @@ where
 }
 
 //#[unstable(feature = "btree_drain_filter", issue = "70530")]
-impl<'a, T, F> Iterator for DrainFilter<'_, T, F>
+impl<'a, T, F> Iterator for DrainFilter<'a, T, F>
 where
     F: 'a + FnMut(&T) -> bool,
 {

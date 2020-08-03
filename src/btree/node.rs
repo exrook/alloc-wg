@@ -301,7 +301,7 @@ impl<BorrowType, K, V> NodeRef<BorrowType, K, V, marker::Internal> {
     }
 }
 
-impl<'a, K, V> NodeRef<marker::Mut<'a>, K, V, marker::Internal> {
+impl<K, V> NodeRef<marker::Mut<'_>, K, V, marker::Internal> {
     fn as_internal_mut(&mut self) -> &mut InternalNode<K, V> {
         unsafe { &mut *(self.node.as_ptr() as *mut InternalNode<K, V>) }
     }
@@ -438,7 +438,7 @@ impl<K, V> NodeRef<marker::Owned, K, V, marker::LeafOrInternal> {
     }
 }
 
-impl<'a, K, V, Type> NodeRef<marker::Mut<'a>, K, V, Type> {
+impl<K, V, Type> NodeRef<marker::Mut<'_>, K, V, Type> {
     /// Unsafely asserts to the compiler some static information about whether this
     /// node is a `Leaf`.
     unsafe fn cast_unchecked<NewType>(&mut self) -> NodeRef<marker::Mut<'_>, K, V, NewType> {
@@ -556,7 +556,7 @@ impl<'a, K: 'a, V: 'a, Type> NodeRef<marker::Mut<'a>, K, V, Type> {
     }
 }
 
-impl<'a, K, V> NodeRef<marker::Mut<'a>, K, V, marker::Leaf> {
+impl<K, V> NodeRef<marker::Mut<'_>, K, V, marker::Leaf> {
     /// Adds a key/value pair the end of the node.
     pub fn push(&mut self, key: K, val: V) {
         assert!(self.len() < CAPACITY);
@@ -584,7 +584,7 @@ impl<'a, K, V> NodeRef<marker::Mut<'a>, K, V, marker::Leaf> {
     }
 }
 
-impl<'a, K, V> NodeRef<marker::Mut<'a>, K, V, marker::Internal> {
+impl<K, V> NodeRef<marker::Mut<'_>, K, V, marker::Internal> {
     /// Adds a key/value pair and an edge to go to the right of that pair to
     /// the end of the node.
     pub fn push(&mut self, key: K, val: V, edge: Root<K, V>) {
@@ -646,7 +646,7 @@ impl<'a, K, V> NodeRef<marker::Mut<'a>, K, V, marker::Internal> {
     }
 }
 
-impl<'a, K, V> NodeRef<marker::Mut<'a>, K, V, marker::LeafOrInternal> {
+impl<K, V> NodeRef<marker::Mut<'_>, K, V, marker::LeafOrInternal> {
     /// Removes a key/value pair from the end of this node. If this is an internal node,
     /// also removes the edge that was to the right of that pair.
     pub fn pop(&mut self) -> (K, V, Option<Root<K, V>>) {
@@ -839,7 +839,7 @@ impl<BorrowType, K, V, NodeType, HandleType>
     }
 }
 
-impl<'a, K, V, NodeType, HandleType> Handle<NodeRef<marker::Mut<'a>, K, V, NodeType>, HandleType> {
+impl<K, V, NodeType, HandleType> Handle<NodeRef<marker::Mut<'_>, K, V, NodeType>, HandleType> {
     /// Temporarily takes out another, mutable handle on the same location. Beware, as
     /// this method is very dangerous, doubly so since it may not immediately appear
     /// dangerous.
@@ -1068,7 +1068,7 @@ impl<'a, K: 'a, V: 'a, NodeType> Handle<NodeRef<marker::Mut<'a>, K, V, NodeType>
     }
 }
 
-impl<'a, K, V, NodeType> Handle<NodeRef<marker::Mut<'a>, K, V, NodeType>, marker::KV> {
+impl<K, V, NodeType> Handle<NodeRef<marker::Mut<'_>, K, V, NodeType>, marker::KV> {
     pub fn kv_mut(&mut self) -> (&mut K, &mut V) {
         unsafe {
             let (keys, vals) = self.node.reborrow_mut().into_slices_mut();

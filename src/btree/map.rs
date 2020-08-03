@@ -1588,7 +1588,7 @@ impl<K, V> Drop for IntoIter<K, V> {
     fn drop(&mut self) {
         struct DropGuard<'a, K, V>(&'a mut IntoIter<K, V>);
 
-        impl<'a, K, V> Drop for DropGuard<'a, K, V> {
+        impl<K, V> Drop for DropGuard<'_, K, V> {
             fn drop(&mut self) {
                 // Continue the same loop we perform below. This only runs when unwinding, so we
                 // don't have to care about panics this time (they'll abort).
